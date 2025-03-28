@@ -24,6 +24,19 @@ class Node {
   }
 }
 
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+  }
+  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+  }
+};
+
 //test
-const tree = new Tree([1, 2, 3, 4, 5, 6, 7]);
-console.log(tree.root);
+const tree = new Tree([1, 4, 5, 76, 8, 98, 98, 956, 6, 67]);
+prettyPrint(tree.root);
