@@ -1,18 +1,41 @@
 class Tree {
   constructor(arr) {
-    this.root = this.buildTree([...new Set(arr)].sort((a, b) => a - b));
+    this.root = this.buildTree(arr);
   }
 
-  buildTree(sortedArr) {
-    if (sortedArr.length === 0) return null;
+  buildTree(arr) {
+    if (!arr.length) return null;
 
-    const mid = Math.floor(sortedArr.length / 2);
-    const root = new Node(sortedArr[mid]);
+    const sortedArr = [...new Set(arr)].sort((a, b) => a - b);
+    return this.#buildTreeRec(sortedArr, 0, sortedArr.length - 1);
+  }
 
-    root.left = this.buildTree(sortedArr.slice(0, mid));
-    root.right = this.buildTree(sortedArr.slice(mid + 1));
+  #buildTreeRec(arr, start, end) {
+    if (start > end) return null;
 
-    return root;
+    const mid = Math.floor((start + end) / 2);
+    const node = new Node(arr[mid]);
+
+    node.left = this.#buildTreeRec(arr, start, mid - 1);
+    node.right = this.#buildTreeRec(arr, mid + 1, end);
+
+    return node;
+  }
+
+  insert(val) {
+    this.root = this.#insertRec(this.root, val);
+  }
+
+  #insertRec(node, val) {
+    if (node === null) return new Node(val);
+
+    if (val < node.data) {
+      node.left = this.#insertRec(node.left, val);
+    } else if (val > node.data) {
+      node.right = this.#insertRec(node.right, val);
+    }
+
+    return node;
   }
 }
 
@@ -39,4 +62,6 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 //test
 const tree = new Tree([1, 4, 5, 76, 8, 98, 98, 956, 6, 67]);
+tree.insert(24);
+tree.insert(34);
 prettyPrint(tree.root);
